@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Jukebox</name>
+    </assembly>
+    <members>
+        <member name="T:Jukebox.IPlayCounter">
+            <summary>
+            Interface for getting basic stats about the currently playing track. The IPlayCounter should be
+            obtained by getting the PlayCounter property from the currently playing ITrack, and then discarded 
+            after use, as it can become out-of-date when the playlist changes.
+            </summary>
+        </member>
+        <member name="P:Jukebox.IPlayCounter.TrackDuration">
+            <summary>
+            Gets the duration of the currently playing track in Seconds
+            </summary>
+        </member>
+        <member name="P:Jukebox.IPlayCounter.PlayedDuration">
+            <summary>
+            Gets the played duration of the currently playing track in Seconds
+            </summary>
+        </member>
+        <member name="T:Jukebox.ITrack">
+            <summary>
+            Interface exposing information about tracks sourced from Jukebox
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.Name">
+            <summary>
+            Gets the name of the track
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.Artist">
+            <summary>
+            Gets the name of the artist who performed the track
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.ArtistUrl">
+            <summary>
+            Gets a URL to find out more about the artist who performed the track
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.Album">
+            <summary>
+            Gets the name of the album on which the track was released
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.Genre">
+            <summary>
+            Gets the genre for the track
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.Tags">
+            <summary>
+            Gets any additional text tags that the track has been annotated with
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.TrackImageUrl">
+            <summary>
+            Gets a URL for an image to represent the track
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.AudioClip">
+            <summary>
+            Returns the audio clip containing the track
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.IsReady">
+            <summary>
+            Returns true if the audio clip is ready to play
+            </summary>
+        </member>
+        <member name="P:Jukebox.ITrack.PlayCounter">
+            <summary>
+            Returns an IPlayCounter reference to get dynamic playback information about the current track.
+            NOTE: this will only return valid information whilst the current track is playing. It should be
+            re-queried for subsequent tracks
+            </summary>
+        </member>
+        <member name="T:Jukebox.NewTrackEventHandler">
+            <summary>
+            Event delegate that can be registered to events from IPlaylist or IControl
+            to be notified when the active track changes
+            </summary>
+        </member>
+        <member name="T:Jukebox.IBehaviourExtension">
+            <summary>
+            Interface implemented by IPlaylist and IControl. Both of these methods should
+            be called from the corresponding methods in the parent MonoBehaviour class to
+            correctly initialize and update the extension objects.
+            </summary>
+        </member>
+        <member name="M:Jukebox.IBehaviourExtension.Start(UnityEngine.MonoBehaviour)">
+            <summary>
+            Call Start within the parent MonoBehaviour script's Start method, to allow the component 
+            to correctly initialize itself.
+            </summary>
+            <param name="parent">The parent script that nominally owns and uses this component</param>
+        </member>
+        <member name="M:Jukebox.IBehaviourExtension.Update">
+            <summary>
+            Call Update within the parent MonoBehaviour script's Update method, to allow the component
+            to update itself.
+            </summary>
+        </member>
+        <member name="T:Jukebox.IPlaybackControl">
+            <summary>
+            Interface for accessing and controlling the current track being played by the Jukebox system.
+            This interface is inherited by both IPlaylist and IControl. When multiple playlists are present
+            in a game scene, then the IControl-inherited version of this interface should be used by the wider
+            game code, as it co-ordinates playback between each of the individual playlists. If just a single 
+            playlist is declared, then that playlist may be used directly.
+            </summary>
+        </member>
+        <member name="P:Jukebox.IPlaybackControl.CurrentTrack">
+            <summary>
+            Get the currently playing track controlled by this interface.
+            </summary>
+        </member>
+        <member name="M:Jukebox.IPlaybackControl.StartPlayback">
+            <summary>
+            Start playback of the currently selected track.
+            </summary>
+        </member>
+        <member name="M:Jukebox.IPlaybackControl.PausePlayback">
+            <summary>
+            Pause the currently playing track.
+            </summary>
+        </member>
+        <member name="M:Jukebox.IPlaybackControl.SkipCurrentTrack">
+            <summary>
+            Skip the currently playing track and start playing the next track in the playlist.
+            </summary>
+        </member>
+        <member name="M:Jukebox.IPlaybackControl.LikeCurrentTrack">
+            <summary>
+            Send feedback to Jukebox that the user likes the currently playing track.
+            </summary>
+        </member>
+        <member name="M:Jukebox.IPlaybackControl.DislikeCurrentTrack">
+            <summary>
+            Send feedback to Jukebox that the user dislikes the currently playing track.
+            Note: this keeps the track playing; SkipCurrentTrack must be called to actually
+            skip tracks.
+            </summary>
+        </member>
+        <member name="E:Jukebox.IPlaybackControl.OnNewTrack">
+            <summary>
+            The OnNewTrack event fires whenever a new track associated with this interface starts playing.
+            </summary>
+        </member>
+        <member name="T:Jukebox.IPlaylist">
+            <summary>
+            Interface to access a Jukebox playlist. If a scene contains just a single playlist then
+            this interface may be used to interact with the transport. If multiple playlists are being
+            used then the IControl interface should be used instead to control and query the active playlist.
+            </summary>
+        </member>
+        <member name="T:Jukebox.IControl">
+            <summary>
+            Interface to manage and query the active playlist in a multi-playlist scene. Setting the 'CurrentPlaylist'
+            property allows the Jukebox component to correctly switch between multiple IPlaylist objects
+            </summary>
+        </member>
+        <member name="P:Jukebox.IControl.CurrentPlaylist">
+            <summary>
+            Gets and Sets the current playlist. Use of the IControl.CurrentPlaylist set method is the recommended
+            way to switch between active playlists. Assigning a playlist in this manner will automatically start
+            and stop playback across playlists correctly; and ensure the correct metadata is exposed via the
+            IControl's IPlaybackControl methods.
+            </summary>
+        </member>
+        <member name="T:Jukebox.Factory">
+            <summary>
+            Factory class for instantiating instances of the IControl and IPlaylist classes
+            </summary>
+        </member>
+        <member name="M:Jukebox.Factory.GetControl">
+            <summary>
+            Factory method for Jukebox.IControl
+            </summary>
+            <returns>a reference to an instance of the global Jukebox.IControl object</returns>
+        </member>
+        <member name="M:Jukebox.Factory.CreatePlaylist(UnityEngine.AudioSource,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Factory method for Jukebox.IPlaylist
+            </summary>
+            <param name="source">The AudioSource object that will receive streamed audio data when this playlist is playing</param>
+            <param name="playlistToken">The textual playlist token generated for this playlist on https://www.jukeboxaudio.co </param>
+            <param name="shufflePlay">If set to true, the order of playback of playlist tracks is randomised</param>
+            <param name="autoStart">If set to true, this playlist will start playing as soon as it is loaded.</param>
+            <remarks>
+            Only one Playlist object in a scene should be initialized with autoStart = true, so only one track begins playing
+            </remarks>
+            <returns>an instance of a Jukebox.IPlaylist object</returns>
+        </member>
+    </members>
+</doc>
