@@ -93,7 +93,7 @@
             class to correctly initialize and update the extension objects.
             </summary>
         </member>
-        <member name="M:Jukebox.IBehaviourExtension.Start(UnityEngine.MonoBehaviour)">
+        <member name="M:Jukebox.IBehaviourExtension.Start(Jukebox.IUnityBehaviour)">
             <summary>
             Call Start within the parent MonoBehaviour script's Start method, to 
             allow the component to correctly initialize itself.
@@ -194,6 +194,11 @@
             Get or Set an override for the server to use
             </summary>
         </member>
+        <member name="P:Jukebox.IConfig.DisableCache">
+            <summary>
+            Get or Set whether the local cache is enabled or not
+            </summary>
+        </member>
         <member name="P:Jukebox.IConfig.ApplicationKey">
             <summary>
             Get or Set the Application Key for this Unity Application
@@ -244,6 +249,13 @@
             classes
             </summary>
         </member>
+        <member name="M:Jukebox.Factory.RegisterUnityServices(Jukebox.IUnityServices)">
+            <summary>
+            Register an implementation of the required Jukebox Unity services with the
+            Jukebox plug-in. A standard implementation of IUnityServices is available
+            in the file JukeboxAdapter.cs supplied in the Jukebox SDK
+            </summary>
+        </member>
         <member name="M:Jukebox.Factory.GetControl">
             <summary>
             Factory method for Jukebox.IControl
@@ -252,7 +264,7 @@
             a reference to an instance of the global Jukebox.IControl object
             </returns>
         </member>
-        <member name="M:Jukebox.Factory.CreatePlaylist(UnityEngine.AudioSource,System.String,System.Boolean,System.Boolean)">
+        <member name="M:Jukebox.Factory.CreatePlaylist(Jukebox.IUnityAudioSource,System.String,System.Boolean,System.Boolean)">
             <summary>
             Factory method for Jukebox.IPlaylist
             </summary>
@@ -275,6 +287,318 @@
             autoStart = true, so only one track begins playing
             </remarks>
             <returns>an instance of a Jukebox.IPlaylist object</returns>
+        </member>
+        <member name="T:Jukebox.IUnityServices">
+            <summary>
+            IUnityServices: Top-level interface by which a Unity project exposes the Unity
+            platform functionality required by the Jukebox plug-in. A reference to an
+            IUnityServices implementation must be passed to Jukebox.Factory.RegisterUnityServices
+            prior to any other Jukebox plug-in methods being called. A standard implementation of
+            IUnityServices is available in the file JukeboxAdapter.cs supplied in the Jukebox SDK
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityServices.CreateWWW(System.String)">
+            <summary>
+            Create and return an initialized instance of an IUnityWWW implementation
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityServices.CreateWWW(System.String,System.Byte[],System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Create and return an initialized instance of an IUnityWWW implementation
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityServices.Application">
+            <summary>
+            Return an instance of an IUnityApplication object
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityServices.Json">
+            <summary>
+            Return an instance of an IUnityJson object
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityServices.Debug">
+            <summary>
+            Return an instance of an IUnityDebug object
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityWWW">
+            <summary>
+            IUnityWWW: an object implementing this interface provides a set of Web Request
+            services to allow clients to request resources from the Web or the local device;
+            monitor the request status, and then process the response.
+            
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityWWW.isDone">
+            <summary>
+            Returns true if this request is finished
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityWWW.error">
+            <summary>
+            Returns an error string if this request has failed
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityWWW.url">
+            <summary>
+            Returns the URL for this request
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityWWW.progress">
+            <summary>
+            Returns a float between 0.0 and 1.0 signifying the progress of this request
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityWWW.bytes">
+            <summary>
+            Returns the response data as raw bytes
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityWWW.text">
+            <summary>
+            Returns the response data as text
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityWWW.GetAudioClip(System.Boolean,Jukebox.UnityAudioType)">
+            <summary>
+            Returns the response data as an IUnityAudioClip
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityApplication">
+            <summary>
+            IUnityApplication: an object implementing this interface provides a set of 
+            application-level functions and properties
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityApplication.persistentDataPath">
+            <summary>
+            Returns the persistent data storage path for this application
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityApplication.deviceUniqueIdentifier">
+            <summary>
+            Returns a unique identifier for this device
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityApplication.deviceType">
+            <summary>
+            Returns a string indicating the device type
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityApplication.EscapeURL(System.String)">
+            <summary>
+            Escaped the provided string to make it URL-safe
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityApplication.WaitForSeconds(System.Single)">
+            <summary>
+            Creates and returns a 'WaitForSeconds' object to tell a listening Unity
+            scheduler to suspend this task for the given number (or fraction) of seconds
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityApplication.platformAudioType">
+            <summary>
+            Returns the required audio type for this platform
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityApplication.FrameTime">
+            <summary>
+            Returns the current frame time, in seconds, since the renderer was started
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityJson">
+            <summary>
+            IUnityJson: an object providing this interface implements functions for 
+            converting object to and from a JSON representation
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityJson.FromJson``1(System.String)">
+            <summary>
+            Implement an object from its JSON representation
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityJson.ToJson(System.Object)">
+            <summary>
+            Convert an object to its JSON representation
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityDebug">
+            <summary>
+            IUnityDebug: an object providing this interface implements a set of Debug reporting
+            functions that display debug information in the Unity debug console
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityDebug.LogError(System.Object)">
+            <summary>
+            Log an error message
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityDebug.LogWarning(System.Object)">
+            <summary>
+            Log a warning message
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityDebug.Log(System.Object)">
+            <summary>
+            Log some information
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityBehaviour">
+            <summary>
+            IUnityBehaviour: an object implementing this interface exposes functionality
+            for scheduling Co-Routines within the Unity scheduling system
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityBehaviour.StartCoroutine(System.Collections.IEnumerator)">
+            <summary>
+            Start a Co-Routine in Unity
+            </summary>
+        </member>
+        <member name="T:Jukebox.UnityAudioLoadState">
+            <summary>
+            Value describing the current load state of the audio data associated with an
+            AudioClip.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioLoadState.Unloaded">
+            <summary>
+            Value returned by AudioClip.loadState for an AudioClip that has no audio data 
+            loaded and where loading has not been initiated yet.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioLoadState.Loading">
+            <summary>
+            Value returned by AudioClip.loadState for an AudioClip that is currently loading audio data.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioLoadState.Loaded">
+            <summary>
+            Value returned by AudioClip.loadState for an AudioClip that has succeeded loading its audio data.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioLoadState.Failed">
+            <summary>
+            Value returned by AudioClip.loadState for an AudioClip that has failed loading its audio data.
+            </summary>
+        </member>
+        <member name="T:Jukebox.UnityAudioType">
+            <summary>
+            Type of the imported(native) data.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.UNKNOWN">
+            <summary>
+            3rd party / unknown plugin format.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.ACC">
+            <summary>
+            Acc - not supported.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.AIFF">
+            <summary>
+            AIFF
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.IT">
+            <summary>
+            Impulse Tracker
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.MOD">
+            <summary>
+            Protracker / Fasttracker MOD.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.MPEG">
+            <summary>
+            MP2/MP3 MPEG.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.OGGVORBIS">
+            <summary>
+            Ogg vorbis.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.S3M">
+            <summary>
+            ScreamTracker 3.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.WAV">
+            <summary>
+            Microsoft WAV.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.XM">
+            <summary>
+            FastTracker 2 XM.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.XMA">
+            <summary>
+            Xbox360 XMA.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.VAG">
+            <summary>
+            VAG.
+            </summary>
+        </member>
+        <member name="F:Jukebox.UnityAudioType.AUDIOQUEUE">
+            <summary>
+            iPhone hardware decoder, supports AAC, ALAC and MP3. Extracodecdata is a pointer
+            to an FMOD_AUDIOQUEUE_EXTRACODECDATA structure.
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityAudioClip">
+            <summary>
+            IUnityAudioClip: an implementation of this interface provides functionality
+            for loading and querying information about a downloaded audio clip
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityAudioClip.loadState">
+            <summary>
+            Return the load state of this clip (if it can be determined)
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityAudioClip.length">
+            <summary>
+            Return the length, in seconds
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityAudioClip.LoadAudioData">
+            <summary>
+            Load the audio data
+            </summary>
+        </member>
+        <member name="T:Jukebox.IUnityAudioSource">
+            <summary>
+            IUnityAudioSource: an implementation of this interface provides functionality
+            for controlling a Unity AudioSource
+            </summary>
+        </member>
+        <member name="P:Jukebox.IUnityAudioSource.clip">
+            <summary>
+            Assign or query the currently assigned AudioClip for this audio source
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityAudioSource.Play">
+            <summary>
+            Play the assigned clip
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityAudioSource.Pause">
+            <summary>
+            Pause playback
+            </summary>
+        </member>
+        <member name="M:Jukebox.IUnityAudioSource.UnPause">
+            <summary>
+            Un-Pause previously paused playback
+            </summary>
         </member>
     </members>
 </doc>
